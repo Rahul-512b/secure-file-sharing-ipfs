@@ -1,0 +1,318 @@
+Multi-threading with Python:
+======================
+
+the term "multi-threading is derived from multi-tasking"
+
+Multi-tasking means " doing multiple tasks in a particular 
+
+interval of time" 
+
+who will perform multi-tasking in computers:
+===================================
+
+in computers, CPU or processor can able to do only " job  or 
+
+task processing"
+
+in computer, memory unit is used to "store the data" 
+
+both CPU and Memory unit are called as "Hard ware of the 
+
+system" 
+
+Operating System can able to do manage the tasks in the 
+
+system (it means which task has to execute by the processor 
+
+in computer, from the all available to tasks to complete)
+
+Operating System is a "System Software" and which manages 
+
+the all "hardware components of the System"
+
+or 
+
+OS is act as "interface in between computer hardware and user"
+
+the primary goals or jobs of the OS:
+============================
+
+1)  Process management 
+
+2)  Input/ output device management 
+
+3)  File management 
+
+4)  Memory Management 
+
+5)  Other jobs or tasks of the Computer 
+
+
+when we write any python program as a programmer or 
+
+developer 
+
+first we write the code and we save the file with somename.py 
+
+here OS, will come into picture to store the file in a given name 
+
+in the system called "Hard disk" 
+
+when we want to run the python code, first the python code
+
+will move from "hard disk" to "RAM", this job also can done by 
+
+OS
+
+when the job come to "RAM" , the job also called as "process" 
+
+process means "program under execution" 
+
+in the computer how many applications we open, all application 
+
+will moved to first, RAM by OS, and all applications which are
+
+now available at RAM are called as "Processes" 
+
+In computers, OS will manage the each and every process 
+
+execution 
+
+in computers, OS will also allocate the memory and give the 
+
+any resources like "input and output devices(scanner, printer,
+
+mouse, keyboard) 
+
+OS also called as " Resource manager or  Task manager" 
+
+when we open the multiple processes, each process will 
+
+assigned with process id , for identification purpose 
+
+all process which are running in the RAM, will manage by the 
+
+OS 
+
+in computers, in general all processes are independent with 
+
+each other , but all process are dependent with each other 
+
+when come to resources 
+
+some times, all processes will need same resource, at that 
+
+process are in "race condition", all process manage by OS 
+
+with process scheduling algorithms 
+
+some times, all processes  can need other process using 
+
+resources with each other and no other process can not release
+
+any resource over time, this will leas "Dead Lock" 
+
+but in a computer, in a particular interval of  time we can able 
+
+to manage the multiple applications (process), so it called as 
+
+"multi-programming"
+
+multi-processing means "in a particular interval of time , 
+
+if we execute two or more programs using multiple processors 
+
+or multiple CPUS, then it is called as " multi-processing" 
+
+a process can be divided again into multiple pieces or parts,
+
+each part can be called as "thread" 
+
+thread is also called as "a piece of code and which will do a 
+
+specific job or task" in the process or program 
+
+thread vs process:
+===============
+
+process means "group or collection of threads" 
+
+thread means  "a piece f code"  and which is part of process 
+
+the result of thread is effected  by other threads and process 
+
+all thread in a process will dependent with each other 
+
+in general, we will go for threading, to make the process can 
+
+complete it execution very faster 
+
+
+Async and Await in python:
+=======================
+
+example-1:
+========
+
+import time as t 
+start_time=t.perf_counter()
+def display1():
+    print("this is from display1")
+    t.sleep(3)
+def display2():
+    print("this is from display2")
+    t.sleep(3)
+def display3():
+    print("this is from display3")
+    t.sleep(3)
+display1() 
+display2() 
+display3()
+end_time=t.perf_counter() 
+print(f"total time:{end_time-start_time}")
+
+in python, we able to make the functions can execute all in a same
+
+interval of time using a concept called "asynchronous 
+
+programming"
+
+in python, in order to implement "Asynchronous programming",
+
+in python, we will use the following keywords:
+====================================================
+
+1)  async 
+
+2)  await 
+
+using this concept, we can able to make "function can execute and
+
+function can able to pause it's execution" , this style of approach 
+
+we called "non-blocking code" 
+
+in order to implement the "Asynchronous Programming", in Python
+
+we will also use a module called "asyncio" 
+
+when we define the function with async keyword, then the function
+
+is called as "asynchronous function" 
+
+steps to work with asynchronous functions:
+==================================
+
+step-1:  create the all functions with "async" keyword  
+
+step-2:  create a function with some name, in this  we will 
+
+             gather  all functions which are defined with "async" 
+
+             keyword using a function called "gather()"
+
+step-3:  call the step-2 function, using a function called "run()" 
+
+example-1:
+=========
+
+import time as t 
+import asyncio
+start_time=t.perf_counter()
+async def job1():
+    print("This is my job-1, it is started")
+    await asyncio.sleep(3)
+    print("This is my job-1, it is completed")
+async def job2():
+    print("This is my job-2, it is started")
+    await asyncio.sleep(3)
+    print("This is my job-2, it is completed")
+async def job3():
+    print("This is my job-3, it is started")
+    await asyncio.sleep(3)
+    print("This is my job-3, it is completed")
+#create the a function with name "main" 
+async def main():
+    await asyncio.gather(job1(),job2(),job3())
+#call the main function using run()
+asyncio.run(main())
+end_time=t.perf_counter() 
+print(f"total time:{end_time-start_time}")
+
+
+example-2:
+=========
+
+using asynchronous programming, we need to create a list, which 
+
+generate the even numbers as list, odd numbers as list, numbers
+
+with ends with odd digits for given range as list 
+
+code:
+====
+import time as t 
+import asyncio
+start_time=t.perf_counter()
+async def even_numbers():
+    evenlist=[]
+    for i in range(1,1000000):
+        if i%2==0:
+            evenlist+=[i]
+    await asyncio.sleep(0)
+    #print(evenlist)
+async def odd_numbers():
+    oddlist=[]
+    for i in range(1,1000000):
+        if i%2==0:
+            oddlist+=[i]
+    await asyncio.sleep(0)
+    #print(oddlist)
+async def number_ends_with_odd():
+    mylist=[]
+    for i in range(1,1000000):
+        if str(i)[-1] in "13579":
+            mylist+=[i]
+    await asyncio.sleep(0)
+    #print(mylist)
+async def main():
+    await asyncio.gather(even_numbers(),odd_numbers(),number_ends_with_odd())
+asyncio.run(main())    
+end_time=t.perf_counter() 
+print(f"total time:{end_time-start_time}")
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

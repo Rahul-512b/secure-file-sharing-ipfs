@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Secure File Sharing</h2>
+
+        <div>
+            <strong>{{request.user.username}}</strong>
+
+            <a href="{% url 'logout' %}"
+            class="btn btn-danger btn-sm ms-3">
+                Logout
+            </a>
+        </div>
+    </div>
+    <hr>
+    <div class="card p-4 mb-4">
+
+        <h4>Upload File</h4>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file"
+                name="file"
+                class="form-control mb-3">
+            <div class="mb-3">
+                <label class="form-label">Visibility</label>
+                <div>
+                    <input type="radio"
+                        value="True"
+                        name="access">Public
+                    <input type="radio"
+                        value="False"
+                        name="access"
+                        class="ms-3"
+                        checked> Private
+                </div>
+            </div>
+            <button class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+    <br><br>
+
+    <h3 class="mt-4 mb-3">Files</h3>
+
+    <table class="table table-bordered table-hover">
+        {% if files %}
+        <tr>
+            <th>User</th><th>File</th><th>Download</th><th>View/Request</th><th>Visibility</th>
+        </tr>
+        {% for file in files %}
+        <tr>
+            <td>{{file.user.username}}</td><td>{{file.file.name}}</td>
+            <td><a href="https://gateway.pinata.cloud/ipfs/{{file.cid}}" download>Download</a></td>
+            <!-- <td><a href="http://127.0.0.1:8080/ipfs/{{file.cid}}">Ipfs_View</a> </td>-->
+            <td>
+                {% if request.user == file.user or file.is_public or request.user in file.accessble_users.all %}
+                <a href="https://gateway.pinata.cloud/ipfs/{{file.cid}}" target="_blank">View</a>
+                {% else %}
+                <a href="{% url 'request_view' file.id %}" class="btn btn-warning btn-sm">Request</a>
+                {% endif %}
+            </td>
+            <td>
+                {% if file.is_public %}
+                    <span class="badge text-bg-success">
+                        Public
+                    </span>
+                {% else %}
+                    <span class="badge text-bg-danger">
+                        Private
+                    </span>
+                {% endif %}
+            </td>    
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+    <br><br>
+    <h3 class="mt-4 mb-3">Access Requests</h3>
+    <table class="table table-bordered table-hover">
+        {% if file_requests %}
+        <tr>
+            <th>Requester</th><th>File</th><th>Accept</th><th>Revoke</th>
+        </tr>
+        {% for requests in file_requests %}
+        <tr>
+            <td>{{requests.requester}}</td><td>{{requests.file.file.name}}</td>
+            <td><a href="{% url 'grant_access' requests.requester.id requests.file.id %}" class="btn btn-success btn-sm">
+                Accept</a></td>
+            <td><a href="{% url 'revoke_access' requests.requester.id requests.file.id %}" class="btn btn-danger btn-sm">
+                Revoke</a></td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+    <br><br>
+    <h3 class="mt-4 mb-3">My Requests</h3>
+    <table class="table table-bordered table-hover">
+        {% if my_requests %}
+        <tr>
+            <th>File Onwer</th> <th>File Name</th><th>Status</th>
+        </tr>
+        {% for my_request in my_requests %}
+        <tr>
+            <td>{{my_request.file.user}}</td><td>{{my_request.file.file.name}}</td>
+            <td>{% if my_request.status == "pending" %}
+                <span class="badge text-bg-warning">
+                    Pending
+                </span>
+                {% elif my_request.status == "approved" %}
+                <span class="badge text-bg-success">
+                    Approved
+                </span>
+                {% else %}
+                <span class="badge text-bg-danger">
+                    Rejected
+                </span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+    </table>
+</div>
+</body>
+</html>
