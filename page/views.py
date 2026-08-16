@@ -67,8 +67,8 @@ def ipfs_upload(file):
     
     headers={
         
-            'pinata_api_key': 'd03a5aefa3508c8f3d30',
-            'pinata_secret_api_key': 'e1f8724e255a68861e727d322e725ec6316023eb23851cd8701a904fdfdd6e18'
+            'pinata_api_key': 'api key',
+            'pinata_secret_api_key': 'api secret'
             }   
     
     files={
