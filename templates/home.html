@@ -58,7 +58,12 @@
         {% for file in files %}
         <tr>
             <td>{{file.user.username}}</td><td>{{file.file.name}}</td>
-            <td><a href="https://gateway.pinata.cloud/ipfs/{{file.cid}}" download>Download</a></td>
+            <td>{% if request.user == file.user or file.is_public or request.user in file.accessble_users.all %}
+                <a href="https://gateway.pinata.cloud/ipfs/{{file.cid}}" download>Download</a>
+                {% else %}
+                <a href="{% url 'request_view' file.id %}" class="btn btn-warning btn-sm">Request</a>
+                {% endif %}
+            </td>
             <!-- <td><a href="http://127.0.0.1:8080/ipfs/{{file.cid}}">Ipfs_View</a> </td>-->
             <td>
                 {% if request.user == file.user or file.is_public or request.user in file.accessble_users.all %}
